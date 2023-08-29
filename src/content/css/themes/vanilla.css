@@ -1,0 +1,20 @@
+:root {
+  color-scheme: light;
+  --primary: #301e08;
+  --secondary: #aa9c80;
+  --tab-selected: #301e08;
+  --on-tab-selected: #faf8f4;
+  --background: #faf8f4;
+  --keylines: #d3cfc9;
+  --punctuation: #b9ae96;
+  --collapsed-count: #b9ae96;
+  --string: #896927;
+  --number: #1231a0;
+  --boolean: #8498dd;
+  --key: #301e08;
+  --null: #b9ae96;
+  --control-bar-background: #ebe6db;
+  --line-focused: #f2efea;
+  --selection: #ebe6db;
+  --on-selection: #301e08;
+}
