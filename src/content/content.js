@@ -363,7 +363,7 @@ function onFormattedMouseOver (e) {
   if (liElement) {
     const jsonPathEl = document.querySelector('.json-path')
     const jsonpath = liElement.getAttribute('data-path')
-    jsonPathEl.innerHTML = `JSONPath:<span class="path">${jsonpath}</span>`
+    jsonPathEl.innerHTML = `<span class="path">${jsonpath}</span>`
 
     liElement.classList.add('in-focus')
   }

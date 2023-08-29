@@ -62,7 +62,7 @@ li.collapsed > ul {
 }
 
 .toggle {
-  left: -12px;
+  left: -14px;
   height: 25px;
   width: 25px;
   top: -2px;
@@ -137,7 +137,7 @@ li {
   display: flex;
   justify-content: flex-start;
   width: 100vw;
-  height: 20px;
+  height: 24px;
   background: var(--control-bar-background);
   font-family: var(--font-mono);
   font-size: 12px;
@@ -171,6 +171,7 @@ pre.raw {
   justify-content: flex-start;
   height: 100%;
   flex-shrink: 0;
+  user-select: none;
 }
 
 .tab {

@@ -1,0 +1,20 @@
+:root {
+  color-scheme: dark;
+  --primary: #C0CAF5;
+  --secondary: #888DA8;
+  --tab-selected: #C0CAF5;
+  --on-tab-selected: #1E2336;
+  --background: #1E2336;
+  --keylines: #303349;
+  --punctuation: #7AA2F7;
+  --collapsed-count: #888DA8;
+  --string: #9ECE6A;
+  --number: #BB9AF7;
+  --boolean: #F7768E;
+  --key: #C0CAF5;
+  --null: #888DA8;
+  --control-bar-background: #313853;
+  --line-focused: #282E45;
+  --selection: #3C4463;
+  --on-selection: inherit;
+}
