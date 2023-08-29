@@ -5,7 +5,7 @@
 async function start () {
   const validJSON = isJSON()
 
-  if (validJSON) { // isJSON either returns true or the JSON object
+  if (validJSON) { // isJSON either returns a boolean or the JSON object
     // This is to avoid extra needless parsing if JSON was determined through eventual parsing
     const preElements = document.querySelectorAll('pre')
     const targetElement = preElements[0]
