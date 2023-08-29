@@ -1,0 +1,23 @@
+{
+  "EXT_NAME": {
+    "message": "JSONMate - JSON Formatter"
+  },
+  "EXT_NAME_SHORT": {
+    "message": "JSONMate"
+  },
+  "EXT_DESCRIPTION": {
+    "message": "Automatically formats JSON making it easier to read."
+  },
+  "TAB_FORMATTED": {
+    "message": "Formatted"
+  },
+  "TAB_RAW": {
+    "message": "Raw"
+  },
+  "MENU_RATE": {
+    "message": "Rate JSONMate"
+  },
+  "MENU_DONATE": {
+    "message": "Buy Me a Coffee"
+  }
+}
