@@ -141,6 +141,7 @@ li {
   background: var(--control-bar-background);
   font-family: var(--font-mono);
   font-size: 12px;
+  box-shadow: inset 0px -1px 0px 0px var(--control-bar-shadow);
 }
 
 pre.formatted {
@@ -190,6 +191,7 @@ pre.raw {
   display: flex;
   align-items: center;
   color: var(--secondary);
+  user-select: none;
 }
 
 .json-path > .path {
