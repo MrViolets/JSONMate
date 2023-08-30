@@ -14,6 +14,7 @@
   --key: #000000;
   --null: #888888;
   --control-bar-background: #eeeeee;
+  --control-bar-shadow: rgba(0, 0, 0, 0.1);
   --line-focused: #eeeeee;
   --selection: #cccccc;
   --on-selection: #000000;

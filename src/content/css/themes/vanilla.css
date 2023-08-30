@@ -1,19 +1,20 @@
 :root {
   color-scheme: light;
   --primary: #301e08;
-  --secondary: #aa9c80;
+  --secondary: #8E8673;
   --tab-selected: #301e08;
   --on-tab-selected: #faf8f4;
   --background: #faf8f4;
   --keylines: #d3cfc9;
   --punctuation: #b9ae96;
-  --collapsed-count: #b9ae96;
+  --collapsed-count: #8E8673;
   --string: #896927;
   --number: #1231a0;
   --boolean: #8498dd;
   --key: #301e08;
-  --null: #b9ae96;
+  --null: #8E8673;
   --control-bar-background: #ebe6db;
+  --control-bar-shadow: rgba(48, 30, 8, 0.1);
   --line-focused: #f2efea;
   --selection: #ebe6db;
   --on-selection: #301e08;

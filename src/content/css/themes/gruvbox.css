@@ -14,6 +14,7 @@
   --key: #EDE2C5;
   --null: #A9B7C5;
   --control-bar-background: #3D3D3D;
+  --control-bar-shadow: rgba(255, 255, 255, 0.1);
   --line-focused: #323232;
   --selection: #555555;
   --on-selection: inherit;
