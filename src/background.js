@@ -5,7 +5,6 @@
 import * as menu from './modules/menu.js'
 import * as storage from './modules/storage.js'
 import * as tabs from './modules/tabs.js'
-import * as themes from './modules/themes.js'
 
 chrome.runtime.onInstalled.addListener(onInstalled)
 chrome.runtime.onStartup.addListener(init)
@@ -18,19 +17,10 @@ async function onInstalled () {
 
 async function init () {
   await setupContextMenu()
-  await restoreSelectedThemeMenuItem()
 }
 
 async function setupContextMenu () {
-  const themesMenuItems = getThemesMenuItems()
-
   const menuItems = [
-    ...themesMenuItems,
-    {
-      contexts: ['action'],
-      id: 'separator_2',
-      type: 'separator'
-    },
     {
       title: chrome.i18n.getMessage('MENU_RATE'),
       contexts: ['action'],
@@ -52,61 +42,8 @@ async function setupContextMenu () {
   }
 }
 
-function getThemesMenuItems () {
-  const parentMenuItem = [
-    {
-      title: 'Theme',
-      contexts: ['action'],
-      id: 'themes',
-      type: 'normal'
-    }
-  ]
-
-  const allThemes = themes.themes
-
-  for (const theme of allThemes) {
-    const menuItem = getThemeMenuItem(theme)
-    parentMenuItem.push(menuItem)
-  }
-
-  return parentMenuItem
-}
-
-function getThemeMenuItem (theme) {
-  return {
-    title: theme.name,
-    contexts: ['action'],
-    id: theme.id,
-    type: 'radio',
-    parentId: 'themes'
-  }
-}
-
-async function restoreSelectedThemeMenuItem () {
-  const defaultTheme = themes.themes.find(theme => theme.id === 'clear')
-  const selectedTheme = await storage.load('theme', defaultTheme).catch(error => {
-    console.error(error)
-    return defaultTheme
-  })
-
-  try {
-    await menu.update(selectedTheme.id, { checked: true })
-  } catch (error) {
-    console.error(error)
-  }
-}
-
 async function onMenuClicked (info) {
-  if (info.parentMenuItemId && info.parentMenuItemId === 'themes') {
-    const clickedTheme = themes.themes.find(theme => theme.id === info.menuItemId)
-
-    // Store the new theme obj
-    try {
-      await storage.save('theme', clickedTheme)
-    } catch (error) {
-      console.error(error)
-    }
-  } else if (info.menuItemId === 'rate_extension' || info.menuItemId === 'donate') {
+  if (info.menuItemId === 'rate_extension' || info.menuItemId === 'donate') {
     await openTab(info.menuItemId)
   }
 }
