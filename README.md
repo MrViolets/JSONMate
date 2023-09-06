@@ -30,7 +30,7 @@ JSONMate is a Chrome Extension that helps make JSON more readable by automatical
 To add a new theme, include a new object in the 'allThemes' array in `background.js` eg:
 
 ```
-{ name: 'My Theme', fileName: 'my-theme.css', id: 'myTheme' }
+{ name: 'My Theme', type: 'light', fileName: 'my-theme.css', id: 'myTheme' }
 ```
 
 Then create a new css file for your theme in `content/css/themes` using one of the other existing themes as reference. When the extension is reloaded, the new theme will be available in the extenson control bar.
