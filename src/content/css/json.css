@@ -182,7 +182,6 @@ pre.raw {
   display: flex;
   align-items: center;
   cursor: pointer;
-  text-transform: uppercase;
 }
 
 .json-path {
@@ -240,13 +239,27 @@ li.in-focus {
 }
 
 .theme-picker {
-  position: relative;
+  height: 100%;
 }
 
 .theme-picker select {
+  font-family: var(--font-mono);
+  color: var(--primary);
+  font-size: 12px;
   appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  position: relative;
-  z-index: 0;
+  background: transparent;
+  border: none;
+  outline: none;
+  text-align: left;
+  height: 100%;
+  padding: 0 8px 0 4px;
+  cursor: pointer;
+}
+
+.theme-picker span {
+  color: var(--secondary);
+}
+
+.theme-picker select:hover {
+  color: var(--secondary);
 }

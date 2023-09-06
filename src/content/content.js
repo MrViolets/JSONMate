@@ -3,11 +3,11 @@
 /* global chrome */
 
 const allThemes = [
-  { name: 'Clear', fileName: 'clear.css', id: 'clear' },
-  { name: 'Abyssal', fileName: 'abyssal.css', id: 'abyssal' },
-  { name: 'Gruvbox', fileName: 'gruvbox.css', id: 'gruvbox' },
-  { name: 'Tokyo Night', fileName: 'tokyo-night.css', id: 'tokyoNight' },
-  { name: 'Vanilla', fileName: 'vanilla.css', id: 'vanilla' }
+  { name: 'Clear', type: 'light', fileName: 'clear.css', id: 'clear' },
+  { name: 'Abyssal', type: 'dark', fileName: 'abyssal.css', id: 'abyssal' },
+  { name: 'Gruvbox', type: 'dark', fileName: 'gruvbox.css', id: 'gruvbox' },
+  { name: 'Tokyo Night', type: 'dark', fileName: 'tokyo-night.css', id: 'tokyoNight' },
+  { name: 'Vanilla', type: 'light', fileName: 'vanilla.css', id: 'vanilla' }
 ]
 
 async function start () {
@@ -133,9 +133,12 @@ async function includeControlBar (parent) {
   radioGroup.classList.add('radio-group')
 
   const themePickerParent = document.createElement('div')
+  const themePickerLabel = document.createElement('span')
   const themePickerSelect = document.createElement('select')
+  themePickerLabel.innerText = `${chrome.i18n.getMessage('THEME')}:`
   themePickerSelect.id = 'themeSelect'
   themePickerParent.classList.add('theme-picker', 'action-container')
+  themePickerParent.appendChild(themePickerLabel)
   themePickerParent.appendChild(themePickerSelect)
 
   const tabs = ['raw', 'formatted']
@@ -159,22 +162,35 @@ async function includeControlBar (parent) {
   parent.insertBefore(controlBar, parent.firstChild)
 
   await includeThemesInDropdown(themePickerSelect)
+  resizeSelect(themePickerSelect)
 }
 
 async function includeThemesInDropdown(el) {
+  
+  const groups = {};
+
   for (const theme of allThemes) {
-    const optionElement = document.createElement('option')
-    optionElement.value = theme.id
-    optionElement.innerText = theme.name
-    el.appendChild(optionElement)
+    const label = theme.type.charAt(0).toUpperCase() + theme.type.slice(1);
+
+    if (!groups[theme.type]) {
+      groups[theme.type] = document.createElement('optgroup');
+      groups[theme.type].label = label;
+      el.appendChild(groups[theme.type]);
+    }
+
+    const optionElement = document.createElement('option');
+    optionElement.value = theme.id;
+    optionElement.innerText = theme.name;
+    
+    groups[theme.type].appendChild(optionElement);
   }
 
   const theme = await load('theme', { id: 'clear' }).catch(error => {
-    console.error(error)
-    return { fileName: 'clear.css' }
-  })
+    console.error(error);
+    return { fileName: 'clear.css' };
+  });
 
-  el.value = theme.id
+  el.value = theme.id;
 }
 
 function getToggleEl (name) {
@@ -350,22 +366,36 @@ function registerListeners () {
   }
 
   const themeDropdown = document.getElementById('themeSelect')
-  console.log(themeDropdown)
   themeDropdown.addEventListener('change', onThemeDropdownChanged, false)
 }
 
-async function onThemeDropdownChanged(e) {
+async function onThemeDropdownChanged (e) {
   console.log(e)
   const newTheme = allThemes.find(theme => theme.id === e.target.value)
 
-    // Store the new theme obj
-    try {
-      await save('theme', newTheme)
-    } catch (error) {
-      console.error(error)
-    }
+  // Store the new theme obj
+  try {
+    await save('theme', newTheme)
+  } catch (error) {
+    console.error(error)
+  }
 
-    includeTheme(newTheme)
+  includeTheme(newTheme)
+  resizeSelect(e.target)
+}
+
+function resizeSelect (sel) {
+  const tempOption = document.createElement('option')
+  tempOption.textContent = sel.selectedOptions[0].textContent
+
+  const tempSelect = document.createElement('select')
+  tempSelect.style.visibility = 'hidden'
+  tempSelect.style.position = 'fixed'
+  tempSelect.appendChild(tempOption)
+
+  sel.after(tempSelect)
+  sel.style.width = `${+tempSelect.clientWidth + 4}px`
+  tempSelect.remove()
 }
 
 function onRadioButtonChanged (e) {
