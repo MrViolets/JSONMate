@@ -2,6 +2,14 @@
 
 /* global chrome */
 
+const allThemes = [
+  { name: 'Clear', type: 'light', fileName: 'clear.css', id: 'clear' },
+  { name: 'Abyssal', type: 'dark', fileName: 'abyssal.css', id: 'abyssal' },
+  { name: 'Gruvbox', type: 'dark', fileName: 'gruvbox.css', id: 'gruvbox' },
+  { name: 'Tokyo Night', type: 'dark', fileName: 'tokyo-night.css', id: 'tokyoNight' },
+  { name: 'Vanilla', type: 'light', fileName: 'vanilla.css', id: 'vanilla' }
+]
+
 async function start () {
   const validJSON = isJSON()
 
@@ -88,7 +96,7 @@ async function initJsonViewer (jsonData, targetElement) {
 
   pre.innerHTML = treeHtml
 
-  includeControlBar(app)
+  await includeControlBar(app)
   updateFavicon()
   registerListeners()
 
@@ -111,15 +119,27 @@ function updateFavicon () {
   document.querySelector('head').appendChild(link)
 }
 
-function includeControlBar (parent) {
+async function includeControlBar (parent) {
   const controlBar = document.createElement('div')
   controlBar.classList.add('control-bar')
+
+  const pathAndRadioParent = document.createElement('div')
+  pathAndRadioParent.classList.add('action-container')
 
   const jsonPath = document.createElement('div')
   jsonPath.classList.add('json-path')
 
   const radioGroup = document.createElement('div')
   radioGroup.classList.add('radio-group')
+
+  const themePickerParent = document.createElement('div')
+  const themePickerLabel = document.createElement('span')
+  const themePickerSelect = document.createElement('select')
+  themePickerLabel.innerText = `${chrome.i18n.getMessage('THEME')}:`
+  themePickerSelect.id = 'themeSelect'
+  themePickerParent.classList.add('theme-picker', 'action-container')
+  themePickerParent.appendChild(themePickerLabel)
+  themePickerParent.appendChild(themePickerSelect)
 
   const tabs = ['raw', 'formatted']
 
@@ -134,12 +154,44 @@ function includeControlBar (parent) {
     radioGroup.appendChild(toggle.label)
   }
 
-  controlBar.appendChild(radioGroup)
-  controlBar.appendChild(jsonPath)
+  pathAndRadioParent.appendChild(radioGroup)
+  pathAndRadioParent.appendChild(jsonPath)
+  controlBar.appendChild(pathAndRadioParent)
+  controlBar.appendChild(themePickerParent)
 
   parent.insertBefore(controlBar, parent.firstChild)
 
-  return controlBar
+  await includeThemesInDropdown(themePickerSelect)
+  resizeSelect(themePickerSelect)
+}
+
+async function includeThemesInDropdown(el) {
+  
+  const groups = {};
+
+  for (const theme of allThemes) {
+    const normalizedType = theme.type.toLowerCase();
+    const label = normalizedType.charAt(0).toUpperCase() + normalizedType.slice(1);
+
+    if (!groups[normalizedType]) {
+      groups[normalizedType] = document.createElement('optgroup');
+      groups[normalizedType].label = label;
+      el.appendChild(groups[normalizedType]);
+    }
+
+    const optionElement = document.createElement('option');
+    optionElement.value = theme.id;
+    optionElement.innerText = theme.name;
+    
+    groups[normalizedType].appendChild(optionElement);
+  }
+
+  const theme = await load('theme', { id: 'clear' }).catch(error => {
+    console.error(error);
+    return { fileName: 'clear.css' };
+  });
+
+  el.value = theme.id;
 }
 
 function getToggleEl (name) {
@@ -302,8 +354,6 @@ function sendMessage (message) {
 }
 
 function registerListeners () {
-  chrome.storage.onChanged.addListener(onStorageChanged)
-
   document.addEventListener('click', onDocumentClicked, false)
   document.addEventListener('mousedown', onDocumentMousedown, false)
 
@@ -315,13 +365,38 @@ function registerListeners () {
   for (const r of radioButtons) {
     r.addEventListener('change', onRadioButtonChanged, false)
   }
+
+  const themeDropdown = document.getElementById('themeSelect')
+  themeDropdown.addEventListener('change', onThemeDropdownChanged, false)
 }
 
-function onStorageChanged (changes) {
-  if (changes.theme && changes.theme.newValue) {
-    const newTheme = changes.theme.newValue
-    includeTheme(newTheme)
+async function onThemeDropdownChanged (e) {
+  console.log(e)
+  const newTheme = allThemes.find(theme => theme.id === e.target.value)
+
+  // Store the new theme obj
+  try {
+    await save('theme', newTheme)
+  } catch (error) {
+    console.error(error)
   }
+
+  includeTheme(newTheme)
+  resizeSelect(e.target)
+}
+
+function resizeSelect (sel) {
+  const tempOption = document.createElement('option')
+  tempOption.textContent = sel.selectedOptions[0].textContent
+
+  const tempSelect = document.createElement('select')
+  tempSelect.style.visibility = 'hidden'
+  tempSelect.style.position = 'fixed'
+  tempSelect.appendChild(tempOption)
+
+  sel.after(tempSelect)
+  sel.style.width = `${+tempSelect.clientWidth + 4}px`
+  tempSelect.remove()
 }
 
 function onRadioButtonChanged (e) {

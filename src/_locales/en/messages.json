@@ -8,6 +8,9 @@
   "EXT_DESCRIPTION": {
     "message": "Automatically formats JSON making it easier to read."
   },
+  "THEME": {
+    "message": "Theme"
+  },
   "TAB_FORMATTED": {
     "message": "Formatted"
   },
