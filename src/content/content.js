@@ -170,19 +170,20 @@ async function includeThemesInDropdown(el) {
   const groups = {};
 
   for (const theme of allThemes) {
-    const label = theme.type.charAt(0).toUpperCase() + theme.type.slice(1);
+    const normalizedType = theme.type.toLowerCase();
+    const label = normalizedType.charAt(0).toUpperCase() + normalizedType.slice(1);
 
-    if (!groups[theme.type]) {
-      groups[theme.type] = document.createElement('optgroup');
-      groups[theme.type].label = label;
-      el.appendChild(groups[theme.type]);
+    if (!groups[normalizedType]) {
+      groups[normalizedType] = document.createElement('optgroup');
+      groups[normalizedType].label = label;
+      el.appendChild(groups[normalizedType]);
     }
 
     const optionElement = document.createElement('option');
     optionElement.value = theme.id;
     optionElement.innerText = theme.name;
     
-    groups[theme.type].appendChild(optionElement);
+    groups[normalizedType].appendChild(optionElement);
   }
 
   const theme = await load('theme', { id: 'clear' }).catch(error => {
