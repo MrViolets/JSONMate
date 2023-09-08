@@ -165,33 +165,32 @@ async function includeControlBar (parent) {
   resizeSelect(themePickerSelect)
 }
 
-async function includeThemesInDropdown(el) {
-  
-  const groups = {};
+async function includeThemesInDropdown (el) {
+  const groups = {}
 
   for (const theme of allThemes) {
-    const normalizedType = theme.type.toLowerCase();
-    const label = normalizedType.charAt(0).toUpperCase() + normalizedType.slice(1);
+    const normalizedType = theme.type.toLowerCase()
+    const label = normalizedType.charAt(0).toUpperCase() + normalizedType.slice(1)
 
     if (!groups[normalizedType]) {
-      groups[normalizedType] = document.createElement('optgroup');
-      groups[normalizedType].label = label;
-      el.appendChild(groups[normalizedType]);
+      groups[normalizedType] = document.createElement('optgroup')
+      groups[normalizedType].label = label
+      el.appendChild(groups[normalizedType])
     }
 
-    const optionElement = document.createElement('option');
-    optionElement.value = theme.id;
-    optionElement.innerText = theme.name;
-    
-    groups[normalizedType].appendChild(optionElement);
+    const optionElement = document.createElement('option')
+    optionElement.value = theme.id
+    optionElement.innerText = theme.name
+
+    groups[normalizedType].appendChild(optionElement)
   }
 
   const theme = await load('theme', { id: 'clear' }).catch(error => {
-    console.error(error);
-    return { fileName: 'clear.css' };
-  });
+    console.error(error)
+    return { fileName: 'clear.css' }
+  })
 
-  el.value = theme.id;
+  el.value = theme.id
 }
 
 function getToggleEl (name) {
@@ -354,6 +353,8 @@ function sendMessage (message) {
 }
 
 function registerListeners () {
+  chrome.storage.onChanged.addListener(onStorageChanged)
+
   document.addEventListener('click', onDocumentClicked, false)
   document.addEventListener('mousedown', onDocumentMousedown, false)
 
@@ -371,7 +372,6 @@ function registerListeners () {
 }
 
 async function onThemeDropdownChanged (e) {
-  console.log(e)
   const newTheme = allThemes.find(theme => theme.id === e.target.value)
 
   // Store the new theme obj
@@ -381,8 +381,14 @@ async function onThemeDropdownChanged (e) {
     console.error(error)
   }
 
-  includeTheme(newTheme)
   resizeSelect(e.target)
+}
+
+function onStorageChanged (changes) {
+  if (changes.theme && changes.theme.newValue) {
+    const newTheme = changes.theme.newValue
+    includeTheme(newTheme)
+  }
 }
 
 function resizeSelect (sel) {
